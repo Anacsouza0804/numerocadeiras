@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disponibilidade de Cadeiras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .min-quantity {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Solicite o orçamento:</h1>
+        
+        <label for="state">Orçamento:</label>
+        <select id="state" name="state" onchange="updateCities()" required>
+            <option value="">Selecione o orçamento:</option>
+            <option value="Automação para show">Automação para show</option>
+            <option value="Automação para estádio">Automação para estádio</option>
+            <option value="Automação para cinema">Automação para cinema</option>
+            <option value="Automação para teatro">Automação para teatro</option>
+        </select>
+        <br /><br />
+        
+        <label for="city">Quantidade:</label>
+        <select id="city" name="city" disabled required>
+            <option value="">Selecione a quantidade</option>
+        </select>
+        <p id="minQuantity" class="min-quantity"></p>
+        <br /><br />
+        
+        <button type="button" onclick="submitForm()">Enviar</button>
+        <p id="formMessage"></p>
+    </div>
+
+    <script>
+        // Dados de exemplo para quantidades e quantidades mínimas
+        const serviceData = {
+            'Automação para show': {
+                quantities: ['10 cadeiras', '20 cadeiras', '30 cadeiras'],
+                minQuantity: '50 cadeiras'
+            },
+            'Automação para estádio': {
+                quantities: ['50 cadeiras', '100 cadeiras'],
+                minQuantity: '50 cadeiras'
+            },
+            'Automação para cinema': {
+                quantities: ['5 cadeiras', '15 cadeiras', '25 cadeiras'],
+                minQuantity: '50 cadeiras'
+            },
+            'Automação para teatro': {
+                quantities: ['30 cadeiras', '40 cadeiras', '50 cadeiras'],
+                minQuantity: '50 cadeiras'
+            }
+        };
+
+        // Função para atualizar as opções de quantidade e a quantidade mínima
+        function updateCities() {
+            const stateSelect = document.getElementById('state');
+            const citySelect = document.getElementById('city');
+            const minQuantityP = document.getElementById('minQuantity');
+            const selectedValue = stateSelect.value;
+
+            // Limpar as opções existentes e a mensagem de quantidade mínima
+            citySelect.innerHTML = '<option value="">Selecione a quantidade</option>';
+            minQuantityP.textContent = '';
+
+            if (selectedValue) {
+                citySelect.disabled = false;
+                const data = serviceData[selectedValue] || {};
+                const options = data.quantities || [];
+                const minQuantity = data.minQuantity || '';
+
+                options.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    citySelect.appendChild(optionElement);
+                });
+
+                if (minQuantity) {
+                    minQuantityP.textContent = `Quantidade mínima disponível: ${minQuantity}`;
+                }
+            } else {
+                citySelect.disabled = true;
+            }
+        }
+
+        // Função para enviar o formulário (simulada)
+        function submitForm() {
+            const state = document.getElementById('state').value;
+            const city = document.getElementById('city').value;
+            const message = document.getElementById('formMessage');
+
+            if (state && city) {
+                message.textContent = `Orçamento: ${state}, Quantidade: ${city}`;
+                message.style.color = 'green';
+            } else {
+                message.textContent = 'Por favor, selecione todos os campos.';
+                message.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>
